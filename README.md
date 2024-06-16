@@ -14,7 +14,9 @@ to use the poetry virtual env run:
 
 `peotry shell`
 
-in a terminal
+to install on your local machine thhe dependencies run:
+
+`poetry install `
 
 
 
