@@ -13,10 +13,10 @@
 import dash
 import dash_html_components as html
 import dash_core_components as dcc
+import pandas as pd
 
 app = dash.Dash(__name__)
 app.title = 'SportsAI Project'
-
 app.layout = html.Div([
     html.H1('Welcome to the SportsAI Project!'),
     html.H2('This is the home page of the project.'),
