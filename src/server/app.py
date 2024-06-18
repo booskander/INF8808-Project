@@ -14,9 +14,14 @@ import dash
 import dash_html_components as html
 import dash_core_components as dcc
 import pandas as pd
+import bubble.preprocess as preprocess
+
 
 app = dash.Dash(__name__)
 app.title = 'SportsAI Project'
+df_match_stats = pd.read_excel('./assets/EURO_2020_DATA.xlsx',sheet_name='Match Stats')
+df_player_stats = pd.read_excel('./assets/EURO_2020_DATA.xlsx',sheet_name='Players stats')
+preprocess.preprocess_data(df_match_stats,df_player_stats)
 app.layout = html.Div([
     html.H1('Welcome to the SportsAI Project!'),
     html.H2('This is the home page of the project.'),
