@@ -18,9 +18,9 @@ def get_player_info(player, data_type):
     
     if len(player_name_split) == 2:
         player_name, player_surname = player_name_split
-    elif len(player_name_split) == 1:
+    else :
         player_name = ''
-        player_surname = player_name_split[0]    
+        player_surname = player   
     
     player_rows = df[(df['PlayerName'] == player_name) & (df['PlayerSurname'] == player_surname)]
 
@@ -60,4 +60,4 @@ for player in utils.attacker_players:
     player_data[player] = get_player_info(player, utils.attacker_data_type)
 
 def get_players_info():
-    return player_data
+    print(player_data)

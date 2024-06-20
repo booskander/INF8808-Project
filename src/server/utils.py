@@ -2,7 +2,6 @@ defense_players = [
     "Giovanni Di Lorenzo",
     "Giorgio Chiellini",
     "Leonardo Spinazzola",
-    "Emerson Palmieri",
     "Francesco Acerbi",
     "Leonardo Bonucci",
     "Alessandro Bastoni",
@@ -13,7 +12,6 @@ defense_players = [
 goalkeeper_players = [
     "Salvatore Sirigu",
     "Gianluigi Donnarumma",
-    "Alex Meret"
 ]
 
 midfield_players = [
