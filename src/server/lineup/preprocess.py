@@ -15,14 +15,16 @@ def convert_to_minutes(time_obj):
 def get_player_info(player, data_type):
     player_info = {}
     player_name_split = player.split(' ', 1)
-    
+
     if len(player_name_split) == 2:
         player_name, player_surname = player_name_split
+        player_rows = df[(df['PlayerName'] == player_name) & (df['PlayerSurname'] == player_surname)]
     else :
         player_name = ''
-        player_surname = player   
+        player_surname = player
+        player_rows = df[(df['PlayerSurname'] == player_surname)]
+   
     
-    player_rows = df[(df['PlayerName'] == player_name) & (df['PlayerSurname'] == player_surname)]
 
     player_info = {} 
 
@@ -60,4 +62,4 @@ for player in utils.attacker_players:
     player_data[player] = get_player_info(player, utils.attacker_data_type)
 
 def get_players_info():
-    print(player_data)
+    return player_data
