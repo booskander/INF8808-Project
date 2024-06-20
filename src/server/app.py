@@ -32,3 +32,10 @@ app.layout = html.Div([
     dcc.Link('Go to the MLS page', href='/mls'),
 ])
 server = app.server
+
+# Raw dataframes
+line_ups_df = pd.read_csv("./assets/data/EURO_2020_DATA_line_ups.csv")
+players_stats_df = pd.read_csv("./assets/data/EURO_2020_DATA_players_stats.csv")
+match_events_df = pd.read_csv("./assets/data/EURO_2020_DATA_match_events.csv")
+match_stats_df = pd.read_csv("./assets/data/EURO_2020_DATA_match_stats.csv")
+match_infos_df = pd.read_csv("./assets/data/EURO_2020_DATA_match_infos.csv")
