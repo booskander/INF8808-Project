@@ -45,7 +45,7 @@ def get_player_info(player, data_type):
         else:
             player_info[stat_name] = None
 
-    return {player: player_info}
+    return player_info
 
 for player in utils.defense_players:
     player_data[player] = get_player_info(player, utils.defense_data_type)
