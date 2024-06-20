@@ -14,9 +14,11 @@ import dash
 import dash_html_components as html
 import dash_core_components as dcc
 import pandas as pd
+import lineup.preprocess
 
 app = dash.Dash(__name__)
 app.title = 'SportsAI Project'
+players_info = lineup.preprocess.get_players_info()
 app.layout = html.Div([
     html.H1('Welcome to the SportsAI Project!'),
     html.H2('This is the home page of the project.'),
