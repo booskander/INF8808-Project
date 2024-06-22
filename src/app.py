@@ -56,6 +56,5 @@ app.layout = html.Div([
 def on_update(n_clicks, figure):
     # Update the figure based on some interaction
     figure = bubble.make_bubble_chart(df_viz_1)
-    figure.show()
     return figure, f'Mode: {n_clicks}'
 
