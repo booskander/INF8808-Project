@@ -16,15 +16,22 @@ import dash_core_components as dcc
 import pandas as pd
 import bubble.preprocess as preprocess
 import bubble.chart as bubble
+import field.chart as field
+import field.preprocess as field_preprocess
 from dash.dependencies import Input, Output, State
 from bubble.template import create_template
 app = dash.Dash(__name__)
 app.title = 'SportsAI Project'
+
+# Load the data
 df_match_stats = pd.read_excel('./assets/EURO_2020_DATA.xlsx',sheet_name='Match Stats')
 df_player_stats = pd.read_excel('./assets/EURO_2020_DATA.xlsx',sheet_name='Players stats')
+df_Line_ups = pd.read_excel('./assets/EURO_2020_DATA.xlsx',sheet_name='Line-ups')
+
 df_viz_1 = preprocess.preprocess_data(df_match_stats,df_player_stats)
 # create_template()
 figure = bubble.init_figure()
+field_figure = field.init_figure()
 
 app.layout = html.Div([
     html.H1('Welcome to the SportsAI Project!'),
@@ -43,6 +50,11 @@ app.layout = html.Div([
     dcc.Graph(
         id='bubble-chart',
         figure=figure 
+    ),
+    html.Button('Click not me', id='buttonField'),
+    dcc.Graph(
+        id='field-chart',
+        figure=figure
     )
 ])
 
@@ -52,9 +64,26 @@ app.layout = html.Div([
     [Input('button', 'n_clicks')],
     [State('bubble-chart', 'figure')]
 )
+
 def on_update(n_clicks, figure):
     # Update the figure based on some interaction
     figure = bubble.make_bubble_chart(df_viz_1)
+    figure.show()
+    return figure, f'Mode: {n_clicks}'
+
+@app.callback(
+    Output('field-chart', 'field_figure'),
+    [Input('buttonField', 'n_clicks')],
+    [State('field-chart', 'field_figure')]
+)
+
+def on_update_field_figure(n_clicks, figure):
+    # Update the figure based on some interaction
+    players_data = field_preprocess.get_italian_players_positions(df_Line_ups)
+    filtered_players = field_preprocess.get_filter_italian_final_players(df_Line_ups)
+    player_names = filtered_players['OfficialSurname'].tolist()
+    player_stats = field_preprocess.get_italian_players_stats(df_player_stats, player_names)
+    figure = field.make_field_chart(players_data, player_stats)
     figure.show()
     return figure, f'Mode: {n_clicks}'
 

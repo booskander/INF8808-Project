@@ -1,0 +1,2 @@
+SIZES = 30
+COLORS = "##0000FF"
