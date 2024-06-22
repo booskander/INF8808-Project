@@ -19,6 +19,7 @@ import bubble.chart as bubble
 from dash.dependencies import Input, Output, State
 from bubble.template import create_template
 app = dash.Dash(__name__)
+server = app.server
 app.title = 'SportsAI Project'
 df_match_stats = pd.read_excel('./assets/EURO_2020_DATA.xlsx',sheet_name='Match Stats')
 df_player_stats = pd.read_excel('./assets/EURO_2020_DATA.xlsx',sheet_name='Players stats')
@@ -58,4 +59,3 @@ def on_update(n_clicks, figure):
     figure.show()
     return figure, f'Mode: {n_clicks}'
 
-server = app.server
