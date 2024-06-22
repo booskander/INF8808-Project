@@ -21,6 +21,7 @@ import field.preprocess as field_preprocess
 from dash.dependencies import Input, Output, State
 from bubble.template import create_template
 app = dash.Dash(__name__)
+server = app.server
 app.title = 'SportsAI Project'
 
 # Load the data
@@ -68,7 +69,6 @@ app.layout = html.Div([
 def on_update(n_clicks, figure):
     # Update the figure based on some interaction
     figure = bubble.make_bubble_chart(df_viz_1)
-    figure.show()
     return figure, f'Mode: {n_clicks}'
 
 @app.callback(
