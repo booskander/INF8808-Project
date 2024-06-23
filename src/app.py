@@ -104,7 +104,8 @@ def on_update_field_figure(n_clicks, figure):
 
 def on_update_tournament_figure(n_clicks, figure):
     # Update the figure based on some interaction
-    figure = tournament.make_tournament_figure(df_match_infos)
+    italian_matchs_infos = tournament_field_preprocess.get_italian_match_infos(df_match_infos)
+    figure = tournament.make_tournament_figure(df_match_infos, italian_matchs_infos)
     figure.show()
     return figure, f'Mode: {n_clicks}'
 
