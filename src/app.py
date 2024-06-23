@@ -93,7 +93,6 @@ def on_update_field_figure(n_clicks, figure):
     player_names = filtered_players['OfficialSurname'].tolist()
     player_stats = field_preprocess.get_italian_players_stats(df_player_stats, player_names)
     figure = field.make_field_chart(players_data, player_stats)
-    figure.show()
     return figure, f'Mode: {n_clicks}'
 
 @app.callback(
@@ -106,7 +105,6 @@ def on_update_tournament_figure(n_clicks, figure):
     # Update the figure based on some interaction
     italian_matchs_infos = tournament_field_preprocess.get_italian_match_infos(df_match_infos)
     figure = tournament.make_tournament_figure(df_match_infos, italian_matchs_infos)
-    figure.show()
     return figure, f'Mode: {n_clicks}'
 
 server = app.server
