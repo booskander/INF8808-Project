@@ -50,23 +50,33 @@ def make_field_chart(players=None, stats=None):
     # Add players if provided
     if players is not None:
         for player in players:
-            player_stats = next((stat for stat in stats if stat['ShortName'] == player['ShortName']), {})
-            hover_text = f"{player['ShortName']}<br>"
+            # Initialize player_stats to an empty dictionary
+            player_stats = {}
+            
+            # Iterate through the stats to find the corresponding player's stats
+            for stat in stats:
+                if stat['ShortName'] == player['OfficialSurname']:
+                    player_stats = stat
+                    break
+            # Create the hover text for the player
+            hover_text = f"{player['OfficialSurname']}<br>"
             for key, value in player_stats.items():
                 if key != 'ShortName':
                     hover_text += f"{key}: {value}<br>"
+            
+            # Add the player to the plot
             fig.add_trace(go.Scatter(
                 x=[player['TacticX']],
                 y=[player['TacticY']],
                 mode='markers+text',
                 marker=dict(size=22, color='blue'),
-                text=[player['ShortName']],
+                text=[player['OfficialSurname']],
                 textposition="top center",
-                name=player['ShortName'],
+                name=player['OfficialSurname'],
                 hoverinfo="text",
                 hovertext=hover_text
             ))
-    
+
     # Update layout
     fig.update_layout(
         xaxis=dict(range=[-10, 110], showgrid=False, zeroline=False),

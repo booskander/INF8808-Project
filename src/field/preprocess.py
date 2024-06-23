@@ -34,7 +34,7 @@ def get_filter_italian_final_players(df):
 
 def get_italian_players_positions(df):
     filtered_players = get_filter_italian_final_players(df)
-    players_positions = filtered_players[['ShortName', 'TacticX', 'TacticY']]
+    players_positions = filtered_players[['OfficialSurname', 'TacticX', 'TacticY']]
     players_positions['TacticX'] = players_positions['TacticX'].astype(float) / 10  # Scaling the X position
     players_positions['TacticY'] = players_positions['TacticY'].astype(float) / 10  # Scaling the Y position
     return players_positions.to_dict(orient='records')
@@ -44,18 +44,15 @@ def get_italian_players_stats(df, playerNameList):
         'Goals', 'Fouls committed', 'Yellow cards', 'Red cards', 'Passes accuracy',
         'Dribbling', 'Clearances successful', 'Lost balls', 'Assists', 'Distance covered (Km)', 'Big Chances'
     ]
-    print(playerNameList)
     filtered_stats = df[(df['HomeTeamName'] == 'Italy') & (df['AwayTeamName'] == 'England') & (df['PlayerSurname'].isin(playerNameList)) & (df['StatsName'].isin(stats_to_include))]
-    print(filtered_stats)
     
     player_stats = {}
     for _, row in filtered_stats.iterrows():
-        player = row['PlayerName']
+        player = row['PlayerSurname']
         if player not in player_stats:
             player_stats[player] = {'ShortName': player}
         player_stats[player][row['StatsName']] = row['Value']
-
-    print(player_stats)    
+ 
     return list(player_stats.values())
 
 
