@@ -1,0 +1,70 @@
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-image: url("../assets/images/pages-bg.jpeg");
+    background-size: cover; /* Ensures the image covers the entire div */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat
+}
+
+.page-header {
+    background-color: #061b22;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    justify-content: space-between;
+    display: flex;
+  }
+  
+  .page-header h1 {
+    margin: 0;
+    font-size: 2em;
+  }
+
+.home-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.home-button img {
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+}
+
+.page-footer {
+    background-color: #061b22;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    min-height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.page-footer p {
+    margin: 0;
+    font-size: 1em;
+}
