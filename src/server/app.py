@@ -1,38 +1,52 @@
+# app.py
 import dash
-import dash_core_components as dcc
 import dash_html_components as html
-from flask import Flask, render_template
+from flask import Flask, send_from_directory
 
 server = Flask(__name__)
 
-# Initialize Dash app
-app = dash.Dash(__name__, server=server, url_base_pathname='/')
-
-# Define route to render your index.html template
-
 
 @server.route('/')
-def index():
-    return render_template('website/index.html')
+def serve_index():
+    return send_from_directory('website', 'index.html')
 
 
-# Define layout of the Dash app directly
+@server.route('/index.css')
+def serve_css():
+    return send_from_directory('website', 'index.css')
+
+
+@server.route('/index.js')
+def serve_js():
+    return send_from_directory('website', 'index.js')
+
+
+@server.route('/pages/<path:path>')
+def serve_pages(path):
+    return send_from_directory('website/pages', path)
+
+
+@server.route('/scripts/<path:path>')
+def serve_scripts(path):
+    return send_from_directory('website/scripts', path)
+
+
+@server.route('/styles/<path:path>')
+def serve_styles(path):
+    return send_from_directory('website/styles', path)
+
+
+@server.route('/assets/<path:path>')
+def serve_assets(path):
+    return send_from_directory('website/assets', path)
+
+
+app = dash.Dash(__name__, server=server)
+
 app.layout = html.Div([
-    dcc.Location(id='url', refresh=False),
-    html.Div(id='page-content')
+    html.Iframe(src='/index.html',
+                style={'width': '100%', 'height': '100vh', 'border': 'none'})
 ])
 
-# Callback to update page content based on URL
-
-
-@app.callback(
-    dash.dependencies.Output('page-content', 'children'),
-    [dash.dependencies.Input('url', 'pathname')]
-)
-def display_page(pathname):
-    # This callback renders your Flask-rendered HTML
-    return render_template('website/index.html')
-
-
 if __name__ == '__main__':
-    server.run(port=8050, debug=True)
+    app.run_server(debug=True)
