@@ -1,6 +1,6 @@
 import plotly.graph_objects as go
 import plotly.io as pio
-import server.bubble.bubble as bubble
+import bubble.bubble as bubble
 import plotly.express as px
 import random
 
@@ -29,7 +29,7 @@ def make_bubble_chart(df):
         Returns:
             fig: The figure which will display the bubble chart
     '''
-    fig = go.Figure()
+    fig = init_figure()
     df['size'] = [10, 20, 30, 40, 50, 60, 70,
                   80, 90, 100, 110, 120, 130, 140, 150]
     df['color'] = '#ff9999'
