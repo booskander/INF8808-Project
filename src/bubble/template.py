@@ -10,25 +10,26 @@ THEME = {
         '#A0CED9',
         '#3e6680'
     ],
-    'background_color': '#ebf2fa',
+    'background_color': '#061b22', 
     'font_family': 'Montserrat',
-    'font_color': '#898989',
+    'font_color': '#ffffff',
+    'font_size': 25,
     'label_font_size': 16,
-    'label_background_color': '#ffffff'
+    'label_background_color': 'rgb(255, 128, 128)'
 }
 
 
 def create_template():
-
-    
     pio.templates['my_theme'] = go.layout.Template(
         layout=go.Layout(
             font=dict(
                 family=THEME['font_family'],
-                color=THEME['font_color']
+                color=THEME['font_color'],
+                size = THEME['font_size'] 
             ),
             plot_bgcolor=THEME['background_color'],
             paper_bgcolor=THEME['background_color'],
+            
             hoverlabel=dict(
                 bgcolor=THEME['label_background_color'],
                 font=dict(

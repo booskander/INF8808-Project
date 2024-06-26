@@ -43,7 +43,6 @@ tournament_figure = tournament_chart.get_figure()
 def to_html(component):
     return pio.to_html(component, full_html=False, include_plotlyjs='cdn')
 
-
 @server.route('/pages/vis-1/bubble')
 def serve_bubble():
     html = to_html(bubble_graph)
@@ -104,5 +103,3 @@ app.layout = html.Div([
                 style={'width': '100%', 'height': '100vh', 'border': 'none'})
 ])
 
-if __name__ == '__main':
-    app.run_server(debug=True)
