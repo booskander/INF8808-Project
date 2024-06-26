@@ -1,9 +1,7 @@
 import plotly.graph_objects as go
 import plotly.io as pio
-import bubble.bubble as bubble
 import plotly.express as px
 import random
-
 
 def init_figure():
     '''
@@ -30,13 +28,15 @@ def make_bubble_chart(df):
             fig: The figure which will display the bubble chart
     '''
     fig = init_figure()
-    df['size'] = [10, 20, 30, 40, 50, 60, 70,
-                  80, 90, 100, 110, 120, 130, 140, 150]
+    df['size'] = [100, 20, 70, 30, 10, 55, 70,
+                  50, 90, 55, 60, 90, 85, 45, 35]
+    
     df['color'] = '#ff9999'
     random.seed(0)
-    df['x'] = generate_values(0, 200, 5, 15)
-    df['y'] = generate_values(0, 200, 5, 15)
+    df['x'] = [20, 45, 65, 95, 172, -10, 65, 115, 150, 165, 12, 35, 95, 125, 140]
+    df['y'] = [0, -40, -5, -20, 115, 60, 160, -15, 150, 25, 145, 155, 110, 100, -10]
     df['text'] = df['label'] + '<br>' + df['value'].astype(str)
+    print(df)
     fig = px.scatter(
         df,
         x='x',
@@ -44,7 +44,7 @@ def make_bubble_chart(df):
         size='size',
         color='color',
         hover_name='label',
-        color_discrete_sequence=px.colors.qualitative.Set1,
+        color_discrete_sequence=['#ff9999'],
         hover_data=['label', 'value'],
         size_max=200,
         text='text'
@@ -52,21 +52,21 @@ def make_bubble_chart(df):
     )
 
     fig.update_layout(
-        xaxis=dict(range=[-50, 250],
+        xaxis=dict(range=[-50, 200],
+                  showgrid=False, 
+                  zeroline=False, 
+                  showticklabels=False
+                   ),
+        yaxis=dict(range=[-110,255],
+                   showticklabels=False,
                    showgrid=False,
                    showline=False,
                    zeroline=False,
-                   showticklabels=False,
                    ),
-        yaxis=dict(range=[-50, 250],
-                   showgrid=False,
-                   showline=False,
-                   zeroline=False,
-                   showticklabels=False,
-                   ),
-        title='Bubble Chart',
+        title='Italy statistics',
         template='plotly_dark',
-        showlegend=False
+        showlegend=False,
+        height=600
     )
     fig.update_traces(textposition='middle center')
 

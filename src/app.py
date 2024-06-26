@@ -14,19 +14,18 @@ import dash
 import tournament.chart
 server = Flask(__name__)
 
-""" Bubble chart """
 df_match_stats = pd.read_excel(
     './assets/EURO_2020_DATA.xlsx', sheet_name='Match Stats')
 df_player_stats = pd.read_excel(
     './assets/EURO_2020_DATA.xlsx', sheet_name='Players stats')
-df_viz_1 = bubble_preprocess.preprocess_data(df_match_stats, df_player_stats)
 df_lineups = pd.read_excel(
     "./assets/EURO_2020_DATA.xlsx", sheet_name="Line-ups")
 
 
+""" Bubble chart """
+df_viz_1 = bubble_preprocess.preprocess_data(df_match_stats, df_player_stats)
 bubble_graph = bubble_chart.make_bubble_chart(df_viz_1)
 
-bubble_graph.show()
 """ Field chart """
 players_data = field_preprocess.get_italian_players_positions(df_lineups)
 players = field_preprocess.get_filter_italian_final_players(df_lineups)
@@ -39,7 +38,6 @@ field_graph = field_chart.make_field_chart(players_data, players_stats)
 """ Tournament chart """
 tournament_figure = tournament_chart.get_figure()
 
-tournament_figure.show()
 
 
 def to_html(component):
