@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=0.8" />
     <title>Visualization 2</title>
     <link rel="stylesheet" href="../styles/vis-2.css" />
   </head>
@@ -12,19 +12,17 @@
       <img src="../assets/svg/home-alt-3-svgrepo-com.svg" alt="Home" />
     </button>
   </header>
-  <body>
-    <div class="container">
-      <div class="text">
-          <div class="dropdown-container">
-              <label for="country-dropdown" style="color: aliceblue;">Select Home team:</label>
-              <select id="country-dropdown"></select>
-              <label for="team-dropdown" style="color: aliceblue;">Select Away Team:</label>
-              <select id="team-dropdown" disabled></select>
-          </div>
-          <button id="show-formation-button" style="display: none;">Show Formation</button>
-      </div>
+  <body class="container">
+    <div class = "chart-container">
       <div id="field-chart"></div>
-    </div>  
+      <div class="dropdown-container">
+        <label for="country-dropdown" style="color: aliceblue;">Select Team:</label>
+        <select id="country-dropdown"></select>
+        <label for="team-dropdown" style="color: aliceblue;">Select Versus Team:</label>
+        <select id="team-dropdown" disabled></select>
+        <button id="show-formation-button" style="display: none;">Show Formation</button>
+      </div>
+    </div>
   </body>
   <footer class="page-footer">
     <p>&copy; 2024 INF8808E team 10. All rights reserved.</p>
