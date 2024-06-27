@@ -50,6 +50,17 @@ body {
     padding: 20px;
 }
 
+.tournament-chart-container {
+  align-items: center;
+  display: flex; 
+  flex-direction: column;
+}
+
+.tournament-chart-container > * {
+  width: 70%;
+  height: 50%;
+}
+
 .page-footer {
     background-color: #061b22;
     color: white;
