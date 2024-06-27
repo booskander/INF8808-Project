@@ -23,7 +23,6 @@ def load_match_info(file_path):
     print("Données chargées avec succès.")
     return df_match_infos
 
-
 def get_stages_data():
     file_path = "../assets/EURO_2020_DATA.xlsx"
     base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -60,13 +59,14 @@ def get_stages_data():
                 stats_dict[stat_name] = stat_value
 
         match_info = {
+            "ID" : match_id,
             "team1": home_team,
             "team1_score": score_home,
             "team2": away_team,
             "team2_score": score_away,
             "stats": stats_dict
         }
-        print(match_info)
+
         if round_name == 'final tournament':
             stages_data["Group Stage"].append(match_info)
         elif round_name == 'eighth finals':
@@ -80,3 +80,10 @@ def get_stages_data():
 
     return stages_data
 
+def get_match_stats(matchID):
+    stages_data = get_stages_data()
+    for stage in stages_data.values():
+        for match in stage:
+            if match["ID"] == matchID:
+                return match.get("stats", {})
+    return {}
