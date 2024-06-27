@@ -4,18 +4,6 @@
     padding: 0;
     box-sizing: border-box;
 }
-
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-image: url("../assets/images/pages-bg.jpeg");
-    background-size: cover; /* Ensures the image covers the entire div */
-    background-position: center; /* Centers the image */
-    background-repeat: no-repeat
-}
-
 .page-header {
     background-color: #061b22;
     color: white;
@@ -25,12 +13,22 @@ body {
     margin-bottom: 20px;
     justify-content: space-between;
     display: flex;
-  }
-  
-  .page-header h1 {
+    font-family: Arial, sans-serif;
+}
+
+.page-header h1 {
     margin: 0;
     font-size: 2em;
-  }
+}  
+body {
+    min-height: 100vh;
+    background-image: url("../assets/images/pages-bg.jpeg");
+    background-size: cover; /* Ensures the image covers the entire div */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat
+}
+
+
 
 .home-button {
     background: none;
@@ -67,4 +65,18 @@ body {
 .page-footer p {
     margin: 0;
     font-size: 1em;
+}
+
+#bubble-chart {
+
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    display: flex; 
+    flex-direction: column;
+}
+
+#bubble-chart > * {
+    width: 95%;
+    height: 80%;
 }

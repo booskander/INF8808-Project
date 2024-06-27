@@ -18,16 +18,16 @@ logging.basicConfig(level=logging.DEBUG)
 import tournament.chart
 server = Flask(__name__)
 
-""" Bubble chart """
 df_match_stats = pd.read_excel(
     './assets/EURO_2020_DATA.xlsx', sheet_name='Match Stats')
 df_player_stats = pd.read_excel(
     './assets/EURO_2020_DATA.xlsx', sheet_name='Players stats')
-df_viz_1 = bubble_preprocess.preprocess_data(df_match_stats, df_player_stats)
 df_lineups = pd.read_excel(
     "./assets/EURO_2020_DATA.xlsx", sheet_name="Line-ups")
 
 
+""" Bubble chart """
+df_viz_1 = bubble_preprocess.preprocess_data(df_match_stats, df_player_stats)
 bubble_graph = bubble_chart.make_bubble_chart(df_viz_1)
 
 """ Field chart """
@@ -53,7 +53,6 @@ tournament_figure = tournament_chart.get_figure()
 
 def to_html(component):
     return pio.to_html(component, full_html=False, include_plotlyjs='cdn')
-
 
 @server.route('/pages/vis-1/bubble')
 def serve_bubble():
@@ -128,5 +127,3 @@ app.layout = html.Div([
                 style={'width': '100%', 'height': '100vh', 'border': 'none'})
 ])
 
-if __name__ == '__main':
-    app.run_server(debug=True)

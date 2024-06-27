@@ -58,10 +58,10 @@ def get_best_scorer(df):
     '''
     This function returns the best scorer for Italy.
     '''
-    # scorer_df = df[((df['HomeTeamName'] == 'Italy') | (df['AwayTeamName'] == 'Italy')) & (df['StatsName'] == 'Goals')]
-    # scorer_df['Value'] = pd.to_numeric(scorer_df['Value'], errors='coerce').fillna(0)
-    # scorer_goals = scorer_df.groupby('PlayerName')['Value'].sum()
-    # best_scorer_name = scorer_goals.idxmax()
-    # best_scorer_surname = df[df['PlayerName'] == best_scorer_name]['PlayerSurname'].values[0]
-    # best_scorer = best_scorer_name + ' ' + best_scorer_surname
-    return 'best_scorer'
+    scorer_df = df[((df['HomeTeamName'] == 'Italy') | (df['AwayTeamName'] == 'Italy')) & (df['StatsName'] == 'Goals')]
+    scorer_df['Value'] = pd.to_numeric(scorer_df['Value'], errors='coerce').fillna(0)
+    scorer_goals = scorer_df.groupby('PlayerName')['Value'].sum()
+    best_scorer_name = scorer_goals.idxmax()
+    best_scorer_surname = df[df['PlayerName'] == best_scorer_name]['PlayerSurname'].values[0]
+    best_scorer = best_scorer_name + ' ' + best_scorer_surname
+    return best_scorer
