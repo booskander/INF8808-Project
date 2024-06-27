@@ -7,6 +7,8 @@ from field import chart as field_chart
 from field import preprocess as field_preprocess
 from field import chart as field_chart
 from tournament import chart as tournament_chart
+from tournament import preprocess as tournament_preprocess
+
 import dash_core_components as dcc
 import dash_html_components as html
 import dash
@@ -37,9 +39,8 @@ players_stats = field_preprocess.get_italian_players_stats(
 field_graph = field_chart.make_field_chart(players_data, players_stats)
 
 """ Tournament chart """
-file_path = "./assets/EURO_2020_DATA.xlsx"
-df_match_infos = tournament_chart.load_match_data(file_path)
-tournament_figure = tournament_chart.initialize(df_match_infos)
+
+tournament_figure = tournament_chart.make_tournament_chart()
 
 
 def to_html(component):

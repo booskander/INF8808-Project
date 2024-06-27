@@ -2,17 +2,8 @@ import os, sys
 sys.path.append(os.path.dirname(__file__))
 import pandas as pd
 import plotly.graph_objects as go
-from preprocess import get_stages_data
+from preprocess import get_stages_data, load_match_data
 
-def load_match_data(file_path):
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"Le fichier n'existe pas à l'emplacement spécifié : {file_path}")
-
-    print(f"Chargement des données depuis {file_path}...")
-    df_match_infos = pd.read_excel(file_path, sheet_name='Match information',
-                                   usecols=['HomeTeamName', 'AwayTeamName', 'RoundName', 'ScoreHome', 'ScoreAway'])
-    print("Données chargées avec succès.")
-    return df_match_infos
 
 
 def add_match(fig, x, y, match, stage_height):
@@ -38,7 +29,11 @@ def add_match(fig, x, y, match, stage_height):
 
 
 
-def initialize(df_match_infos):
+def make_tournament_chart():
+    file_path = "../assets/EURO_2020_DATA.xlsx"
+    base_dir = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the current script
+    absolute_path = os.path.join(base_dir, file_path)
+    df_match_infos = load_match_data(absolute_path)
     stages_data = get_stages_data(df_match_infos)
     fig = go.Figure()
 

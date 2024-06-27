@@ -1,4 +1,16 @@
+import os
 import pandas as pd
+
+
+def load_match_data(file_path):
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"Le fichier n'existe pas à l'emplacement spécifié : {file_path}")
+
+    print(f"Chargement des données depuis {file_path}...")
+    df_match_infos = pd.read_excel(file_path, sheet_name='Match information',
+                                   usecols=['HomeTeamName', 'AwayTeamName', 'RoundName', 'ScoreHome', 'ScoreAway'])
+    print("Données chargées avec succès.")
+    return df_match_infos
 
 def get_stages_data(df_match_infos: pd.DataFrame):
     stages_data = {
