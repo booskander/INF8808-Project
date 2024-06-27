@@ -28,12 +28,11 @@ def get_country_team_(df):
     return unique_countries
 
 def get_opposite_team_(df, country_team):
-    filtered_home_teams = df[df['Country'] == country_team]['HomeTeamName'].unique()
-    filtered_away_teams = df[df['Country'] == country_team]['AwayTeamName'].unique()
+    filtered_home_teams = df[(df['Country'] == country_team) & ((df['HomeTeamName'] == country_team) | (df['AwayTeamName'] == country_team))]['HomeTeamName'].unique()
+    filtered_away_teams = df[(df['Country'] == country_team) & ((df['HomeTeamName'] == country_team) | (df['AwayTeamName'] == country_team))]['AwayTeamName'].unique()
     filtered_opposite_teams = set(filtered_home_teams).union(set(filtered_away_teams))
     if country_team in filtered_opposite_teams:
         filtered_opposite_teams.remove(country_team)
-    
     return list(filtered_opposite_teams)
 
 # Define a function to filter the players for Italy who are not staff and not bench
