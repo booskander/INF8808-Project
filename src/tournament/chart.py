@@ -10,35 +10,8 @@ def init_figure():
 
 def make_tournament_bracket(df_match_infos):
     fig = init_figure()
-
-    rounds = df_match_infos['RoundName'].unique()
-    rounds.sort()
-
-    teams = list(set(df_match_infos['HomeTeamName'].tolist(
-    ) + df_match_infos['AwayTeamName'].tolist()))
-    y_positions = {team: i for i, team in enumerate(teams)}
-
-    for _, match in df_match_infos.iterrows():
-        fig.add_trace(go.Scatter(
-            x=[match['RoundName'], match['RoundName']],
-            y=[y_positions[match['HomeTeamName']],
-                y_positions[match['AwayTeamName']]],
-            mode='lines+markers+text',
-            text=[f"{match['HomeTeamName']} ({match['ScoreHome']})",
-                  f"{match['AwayTeamName']} ({match['ScoreAway']})"],
-            textposition='top center',
-            line=dict(color='blue', width=4)
-        ))
-
-    fig.update_layout(
-        title="EURO 2020 Knockout Phase",
-        xaxis=dict(title='Competition level', tickvals=list(
-            range(len(rounds))), ticktext=rounds),
-        yaxis=dict(title='Teams', tickvals=list(
-            y_positions.values()), ticktext=list(y_positions.keys())),
-        showlegend=False
-    )
-    # fig.show()
+    
+    print(df_match_infos)
     return fig
 
 
