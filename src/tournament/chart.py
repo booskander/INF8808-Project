@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 
 # Function to load match data from Excel file
 def load_match_data(file_path):
@@ -18,20 +17,21 @@ def add_match(fig, x, y, match, stage_height):
     fig.add_shape(
         type="rect",
         x0=x, y0=y, x1=x+0.2, y1=y+stage_height,
-        line=dict(color="black", width=2)
+        line=dict(color="black", width=2),
+        fillcolor="lightblue"
     )
     fig.add_annotation(
         x=x+0.1, y=y+stage_height/2 + 0.02, text=f"{match['team1']} {match['team1_score']}",
-        showarrow=False, font=dict(size=12), yshift=5
+        showarrow=False, font=dict(size=12), yanchor="middle", xanchor="center"
     )
     fig.add_annotation(
         x=x+0.1, y=y+stage_height/2 - 0.05, text=f"{match['team2']} {match['team2_score']}",
-        showarrow=False, font=dict(size=12), yshift=-5
+        showarrow=False, font=dict(size=12), yanchor="middle", xanchor="center"
     )
     if "penalties" in match:
         fig.add_annotation(
             x=x+0.1, y=y+stage_height/2 - 0.1, text=f"(P {match['penalties']})",
-            showarrow=False, font=dict(size=12, color="red")
+            showarrow=False, font=dict(size=12, color="red"), yanchor="middle", xanchor="center"
         )
 
 # Initialize and organize data into stages based on rounds
@@ -50,7 +50,7 @@ def initialize(df_match_infos):
         round_name = match['RoundName']
         score_home = match['ScoreHome']
         score_away = match['ScoreAway']
-        # Keep only Italy matches 
+        # Keep only Italy matches
         if away_team != 'Italy' and home_team != 'Italy':
             continue
 
@@ -82,7 +82,7 @@ def initialize(df_match_infos):
     # Add the matches and stage labels
     stage_height = 0.1
     x = 0
-    y_base_group = 1.0
+    y_base_group = 0.9  # Start higher up for the group stage
     y_base_knockout = y_base_group - (stage_height * 1.5) * 1  # Align with the second match of the group stage
     y_base = [y_base_group, y_base_knockout, y_base_knockout, y_base_knockout, y_base_knockout]
 
@@ -90,11 +90,8 @@ def initialize(df_match_infos):
     y_positions = []
 
     for i, (stage_name, y) in enumerate(zip(stages_data.keys(), y_base)):
-        # Add stage label
-        if i == 0:  # Group Stage
-            fig.add_annotation(x=x + 0.1, y=y + 0.05, text=stage_name, showarrow=False, font=dict(size=14, color="blue"), xanchor="center")
-        else:  # Knockout Stages
-            fig.add_annotation(x=x + 0.1, y=y_base_knockout + 0.05, text=stage_name, showarrow=False, font=dict(size=14, color="blue"), xanchor="center")
+        # Add stage label at the bottom
+        fig.add_annotation(x=x + 0.1, y=0, text=stage_name, showarrow=False, font=dict(size=14, color="blue"), xanchor="center")
 
         for match in stages_data[stage_name]:
             add_match(fig, x, y, match, stage_height)
