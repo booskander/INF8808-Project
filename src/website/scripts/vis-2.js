@@ -127,7 +127,6 @@ function populateDropdowns() {
                 const dashContainer = document.getElementById("field-chart");
                 dashContainer.innerHTML = data.field_graph;
                 loadScriptsAndExecuteInline(dashContainer).then(() => {
-                    console.log('Animating markers', dashContainer.innerHTML);
                     animateMarkers();
                 });
             })
@@ -149,7 +148,6 @@ function animateMarkers() {
 
     markers.forEach(marker => {
         const transform = marker.getAttribute("transform");
-        console.log(`Marker transform: ${transform}`);
         const translateMatch = /translate\(([^,]+),([^)]+)\)/.exec(transform);
         if (!translateMatch) {
             console.error('No translate found for marker:', marker);
@@ -159,7 +157,6 @@ function animateMarkers() {
         const initialX = parseFloat(translateMatch[1]);
         const initialY = parseFloat(translateMatch[2]);
         const amplitude = 2; 
-        console.log(`Initial position: (${initialX}, ${initialY})`);
 
         function animate() {
             counter++;
