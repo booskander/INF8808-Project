@@ -1,10 +1,8 @@
 import plotly.graph_objects as go
 import plotly.io as pio
-import bubble.bubble as bubble
 import plotly.express as px
 import random
-
-
+from bubble.template import create_template
 def init_figure():
     '''
         Initializes the Graph Object figure used to display the bar chart.
@@ -30,64 +28,68 @@ def make_bubble_chart(df):
             fig: The figure which will display the bubble chart
     '''
     fig = init_figure()
-    df['size'] = [10, 20, 30, 40, 50, 60, 70,
-                  80, 90, 100, 110, 120, 130, 140, 150]
+    df['size'] = [100, 20, 70, 30, 10, 55, 70,
+                  50, 90, 55, 60, 90, 85, 45, 35]
+    
     df['color'] = '#ff9999'
     random.seed(0)
-    df['x'] = generate_values(0, 200, 5, 15)
-    df['y'] = generate_values(0, 200, 5, 15)
+    df['x'] = [20, 45, 65, 95, 172, -10, 65, 115, 150, 165, 12, 35, 95, 125, 140]
+    df['y'] = [0, -40, -5, -20, 115, 60, 160, -15, 150, 25, 145, 155, 110, 100, -10]
     df['text'] = df['label'] + '<br>' + df['value'].astype(str)
+    red_gradient = [
+    [0, 'rgb(255, 230, 230)'],  # Light red
+    [0.5, 'rgb(255, 128, 128)'], # Medium red
+    [1, 'rgb(255, 0, 0)']       # Pure red
+    ]
+    
     fig = px.scatter(
         df,
         x='x',
         y='y',
         size='size',
-        color='color',
+        color='size',
+        color_continuous_scale= red_gradient,
         hover_name='label',
-        color_discrete_sequence=px.colors.qualitative.Set1,
-        hover_data=['label', 'value'],
         size_max=200,
-        text='text'
-
+        text='text',
+        labels= {'x': '', 'y': ''},
+        custom_data=['label','value'],
+        
     )
-
+    create_template()
     fig.update_layout(
-        xaxis=dict(range=[-50, 250],
+        xaxis=dict(range=[-50, 200],
+                  showgrid=False, 
+                  zeroline=False, 
+                  showticklabels=False
+                   ),
+        yaxis=dict(range=[-110,255],
+                   showticklabels=False,
                    showgrid=False,
                    showline=False,
                    zeroline=False,
-                   showticklabels=False,
                    ),
-        yaxis=dict(range=[-50, 250],
-                   showgrid=False,
-                   showline=False,
-                   zeroline=False,
-                   showticklabels=False,
-                   ),
-        title='Bubble Chart',
-        template='plotly_dark',
-        showlegend=False
+        title='Italy statistics',
+        template=pio.templates['my_theme'],
+        showlegend=False,
+        height=700,
+        coloraxis_colorbar = dict(
+            title = 'Impact',
+            tickvals = [],
+            ticktext = ['Low', 'Medium', 'High']
+        ) 
     )
-    fig.update_traces(textposition='middle center')
+    fig.update_traces(
+        textposition='middle center',
+        hovertemplate=hover_template('%{customdata[0]}', '%{customdata[1]}'),
+        marker=dict(line=dict(width=0))
+    )
 
     return fig
 
+def hover_template(label, value):
+    hover_template = f'<b>{label}<br>' + \
+                     f'<b>Value:</b> {value}<br>' + \
+                     '<extra></extra>'
 
-def generate_values(min_value, max_value, min_distance, max_distance):
-    values = [min_value]
-    current_value = min_value
-    use_min_distance = True
-
-    while True:
-        # Alternate between min_distance and max_distance
-        next_distance = min_distance if use_min_distance else max_distance
-        next_value = current_value + next_distance
-
-        if next_value > max_value:
-            break
-
-        values.append(next_value)
-        current_value = next_value
-        use_min_distance = not use_min_distance  # Alternate for next step
-    random.shuffle(values)
-    return values[:15]
+    return hover_template   
