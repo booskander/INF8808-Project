@@ -1,6 +1,6 @@
 import pandas as pd
 import plotly.io as pio
-from flask import Flask, send_from_directory, jsonify
+from flask import Flask, send_from_directory, jsonify, request
 from bubble import preprocess as bubble_preprocess
 from bubble import chart as bubble_chart
 from field import chart as field_chart
@@ -10,6 +10,10 @@ from tournament import chart as tournament_chart
 import dash_core_components as dcc
 import dash_html_components as html
 import dash
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.DEBUG)
 
 import tournament.chart
 server = Flask(__name__)
@@ -26,20 +30,25 @@ df_lineups = pd.read_excel(
 
 bubble_graph = bubble_chart.make_bubble_chart(df_viz_1)
 
-bubble_graph.show()
 """ Field chart """
-players_data = field_preprocess.get_italian_players_positions(df_lineups)
-players = field_preprocess.get_filter_italian_final_players(df_lineups)
-players_names = players['OfficialSurname'].tolist()
-players_stats = field_preprocess.get_italian_players_stats(
-    df_player_stats, players_names)
 
-field_graph = field_chart.make_field_chart(players_data, players_stats)
+def get_field_chart(team, opposite_team):
+    if team is None:
+        team = 'Italy'
+    if opposite_team is None:
+        opposite_team = 'England'
+    players_data = field_preprocess.get_italian_players_positions(df_lineups, team, opposite_team)
+    players = field_preprocess.get_filter_italian_final_players(df_lineups, team, opposite_team)
+    players_names = players['OfficialSurname'].tolist()
+    players_stats = field_preprocess.get_italian_players_stats(
+        df_player_stats, players_names, team, opposite_team)
+
+    field_graph = field_chart.make_field_chart(players_data, players_stats)
+    return field_graph
 
 """ Tournament chart """
 tournament_figure = tournament_chart.get_figure()
 
-tournament_figure.show()
 
 
 def to_html(component):
@@ -54,6 +63,9 @@ def serve_bubble():
 
 @server.route('/pages/vis-2/field')
 def serve_field():
+    team = request.args.get('team', 'Italy')
+    opposite_team = request.args.get('opposite_team', 'England')
+    field_graph = get_field_chart(team, opposite_team)
     html = to_html(field_graph)
     return jsonify(dict(field_graph=html))
 
@@ -63,6 +75,16 @@ def serve_tournament():
     html = to_html(tournament_figure)
     return jsonify(dict(tournament_graph=html))
 
+# New routes for dropdown data
+@server.route('/data/team')
+def get_team():
+    team = field_preprocess.get_country_team_(df_lineups)
+    return jsonify(team.tolist())
+
+@server.route('/data/teams/<team_country>')
+def get_teams(team_country):
+    teams = field_preprocess.get_opposite_team_(df_lineups, team_country)
+    return jsonify(teams)
 
 @server.route('/')
 def serve_index():
