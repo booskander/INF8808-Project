@@ -1,5 +1,39 @@
 import pandas as pd
 
+def get_stages_data(df_match_infos: pd.DataFrame):
+    stages_data = {
+        "Group Stage": [],
+        "Round 16": [],
+        "Quarterfinals": [],
+        "Semifinals": [],
+        "Final": []
+    }
+
+    for _, match in df_match_infos.iterrows():
+        home_team = match['HomeTeamName']
+        away_team = match['AwayTeamName']
+        round_name = match['RoundName']
+        score_home = match['ScoreHome']
+        score_away = match['ScoreAway']
+        # Keep only Italy matches
+        if away_team != 'Italy' and home_team != 'Italy':
+            continue
+
+        match_info = {"team1": home_team, "team1_score": score_home, "team2": away_team, "team2_score": score_away}
+
+        if round_name == 'final tournament':
+            stages_data["Group Stage"].append(match_info)
+        elif round_name == 'eighth finals':
+            stages_data["Round 16"].append(match_info)
+        elif round_name == 'quarter finals':
+            stages_data["Quarterfinals"].append(match_info)
+        elif round_name == 'semi finals':
+            stages_data["Semifinals"].append(match_info)
+        elif round_name == 'final':
+            stages_data["Final"].append(match_info)
+
+    return stages_data
+
 def preprocess_data(match_infos):
     '''
     This function preprocesses the data for the bubble chart.

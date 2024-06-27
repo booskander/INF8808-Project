@@ -1,9 +1,9 @@
-import os
+import os, sys
+sys.path.append(os.path.dirname(__file__))
 import pandas as pd
 import plotly.graph_objects as go
+from preprocess import get_stages_data
 
-
-# Function to load match data from Excel file
 def load_match_data(file_path):
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Le fichier n'existe pas à l'emplacement spécifié : {file_path}")
@@ -15,7 +15,6 @@ def load_match_data(file_path):
     return df_match_infos
 
 
-# Function to add a match to the figure
 def add_match(fig, x, y, match, stage_height):
     fig.add_shape(
         type="rect",
@@ -38,43 +37,11 @@ def add_match(fig, x, y, match, stage_height):
         )
 
 
-# Initialize and organize data into stages based on rounds
+
 def initialize(df_match_infos):
-    stages_data = {
-        "Group Stage": [],
-        "Round 16": [],
-        "Quarterfinals": [],
-        "Semifinals": [],
-        "Final": []
-    }
-
-    for _, match in df_match_infos.iterrows():
-        home_team = match['HomeTeamName']
-        away_team = match['AwayTeamName']
-        round_name = match['RoundName']
-        score_home = match['ScoreHome']
-        score_away = match['ScoreAway']
-        # Keep only Italy matches
-        if away_team != 'Italy' and home_team != 'Italy':
-            continue
-
-        match_info = {"team1": home_team, "team1_score": score_home, "team2": away_team, "team2_score": score_away}
-
-        if round_name == 'final tournament':
-            stages_data["Group Stage"].append(match_info)
-        elif round_name == 'eighth finals':
-            stages_data["Round 16"].append(match_info)
-        elif round_name == 'quarter finals':
-            stages_data["Quarterfinals"].append(match_info)
-        elif round_name == 'semi finals':
-            stages_data["Semifinals"].append(match_info)
-        elif round_name == 'final':
-            stages_data["Final"].append(match_info)
-
-    # Create figure
+    stages_data = get_stages_data(df_match_infos)
     fig = go.Figure()
 
-    # Set the layout
     fig.update_layout(
         xaxis=dict(range=[-0.05, 1.25], showgrid=False, zeroline=False, showticklabels=False),
         yaxis=dict(range=[0, 1.2], showgrid=False, zeroline=False, showticklabels=False),
@@ -85,17 +52,16 @@ def initialize(df_match_infos):
         margin=dict(t=100, b=20, l=20, r=20)
     )
 
-    # Add the matches and stage labels
+    
     stage_height = 0.1
     x = 0
-    y_base_group = 0.9  # Start higher up for the group stage
-    y_base_knockout = y_base_group - (stage_height * 1.5) * 1  # Align with the second match of the group stage
+    y_base_group = 0.9  
+    y_base_knockout = y_base_group - (stage_height * 1.5) * 1  
     y_base = [y_base_group, y_base_knockout, y_base_knockout, y_base_knockout, y_base_knockout]
 
     x_positions = []
     y_positions = []
 
-    # Add stage labels at the top
     for i, stage_name in enumerate(stages_data.keys()):
         fig.add_annotation(x=x + i * 0.25 + 0.1, y=1.05, text=stage_name, showarrow=False,
                            font=dict(size=14, color="blue"), xanchor="center")
@@ -103,14 +69,13 @@ def initialize(df_match_infos):
     for i, (stage_name, y) in enumerate(zip(stages_data.keys(), y_base)):
         for match in stages_data[stage_name]:
             add_match(fig, x, y, match, stage_height)
-            if i != 0:  # Store positions for knockout stages to draw lines
+            if i != 0:  
                 x_positions.append(x)
                 y_positions.append(y + stage_height / 2)
-            if i == 0:  # Group Stage
-                y -= stage_height * 1.5  # Add some spacing between matches in the same stage
-        x += 0.25  # Add spacing between stages
+            if i == 0:  
+                y -= stage_height * 1.5  
+        x += 0.25  
 
-    # Draw connecting lines for knockout stages
     for i in range(1, len(x_positions)):
         fig.add_shape(
             type="line",
@@ -119,5 +84,4 @@ def initialize(df_match_infos):
             line=dict(color="black", width=2)
         )
 
-    # Show the figure
     return fig
