@@ -1,69 +1,48 @@
+import os
 import pandas as pd
 import plotly.graph_objects as go
-import plotly.io as pio
-import os
-import random
+from plotly.subplots import make_subplots
 
-# Create a custom Plotly template
-def create_template():
-    THEME = {
-        'background_color': '#f2f2f2',
-        'font_family': 'Arial, sans-serif',
-        'font_color': '#333333',
-        'label_font_size': 16,
-        'label_background_color': '#ffffff',
-        'line_color': '#666666'
-    }
-
-    pio.templates['tournament_bracket'] = go.layout.Template(
-        layout=go.Layout(
-            font=dict(
-                family=THEME['font_family'],
-                color=THEME['font_color']
-            ),
-            plot_bgcolor=THEME['background_color'],
-            paper_bgcolor=THEME['background_color'],
-            hoverlabel=dict(
-                bgcolor=THEME['label_background_color'],
-                font=dict(
-                    size=THEME['label_font_size'],
-                    color=THEME['font_color']
-                )
-            ),
-            hovermode='closest'
-        )
-    )
-
-# Function to load match data from an Excel file
+# Function to load match data from Excel file
 def load_match_data(file_path):
     if not os.path.exists(file_path):
-        raise FileNotFoundError(f"File does not exist at the specified location: {file_path}")
+        raise FileNotFoundError(f"Le fichier n'existe pas à l'emplacement spécifié : {file_path}")
 
-    print(f"Loading data from {file_path}...")
+    print(f"Chargement des données depuis {file_path}...")
     df_match_infos = pd.read_excel(file_path, sheet_name='Match information', usecols=['HomeTeamName', 'AwayTeamName', 'RoundName', 'ScoreHome', 'ScoreAway'])
-    print("Data loaded successfully.")
+    print("Données chargées avec succès.")
     return df_match_infos
 
-# Function to simulate match outcomes
-def simulate_match(home_team, away_team):
-    score1 = random.randint(0, 3)
-    score2 = random.randint(0, 3)
-    if score1 > score2:
-        return home_team
-    elif score2 > score1:
-        return away_team
-    else:
-        return random.choice([home_team, away_team])
+# Function to add a match to the figure
+def add_match(fig, x, y, match, stage_height):
+    fig.add_shape(
+        type="rect",
+        x0=x, y0=y, x1=x+0.2, y1=y+stage_height,
+        line=dict(color="black", width=2)
+    )
+    fig.add_annotation(
+        x=x+0.1, y=y+stage_height/2 + 0.02, text=f"{match['team1']} {match['team1_score']}",
+        showarrow=False, font=dict(size=12), yshift=5
+    )
+    fig.add_annotation(
+        x=x+0.1, y=y+stage_height/2 - 0.05, text=f"{match['team2']} {match['team2_score']}",
+        showarrow=False, font=dict(size=12), yshift=-5
+    )
+    if "penalties" in match:
+        fig.add_annotation(
+            x=x+0.1, y=y+stage_height/2 - 0.1, text=f"(P {match['penalties']})",
+            showarrow=False, font=dict(size=12, color="red")
+        )
 
-# Function to create the tournament bracket
-def make_tournament_bracket(df_match_infos):
-    rounds = df_match_infos['RoundName'].unique()
-    rounds.sort()
-
-    teams = list(set(df_match_infos['HomeTeamName'].tolist() + df_match_infos['AwayTeamName'].tolist()))
-    y_positions = {team: i for i, team in enumerate(teams)}
-
-    fig = go.Figure()
+# Initialize and organize data into stages based on rounds
+def initialize(df_match_infos):
+    stages_data = {
+        "Group Stage": [],
+        "Round 16": [],
+        "Quarterfinals": [],
+        "Semifinals": [],
+        "Final": []
+    }
 
     for _, match in df_match_infos.iterrows():
         home_team = match['HomeTeamName']
@@ -71,40 +50,69 @@ def make_tournament_bracket(df_match_infos):
         round_name = match['RoundName']
         score_home = match['ScoreHome']
         score_away = match['ScoreAway']
+        # Keep only Italy matches 
+        if away_team != 'Italy' and home_team != 'Italy':
+            continue
 
-        fig.add_trace(go.Scatter(
-            x=[round_name, round_name],
-            y=[y_positions[home_team], y_positions[away_team]],
-            mode='lines+markers',
-            line=dict(color='#666666', width=2),
-            marker=dict(symbol='line-ew', color='blue', size=10),
-            text=[f"{home_team} ({score_home})", f"{away_team} ({score_away})"],
-            hoverinfo='text',
-            showlegend=False
-        ))
+        if round_name == 'final tournament':
+            stages_data["Group Stage"].append({"team1": home_team, "team1_score": score_home, "team2": away_team, "team2_score": score_away})
+        elif round_name == 'eighth finals':
+            stages_data["Round 16"].append({"team1": home_team, "team1_score": score_home, "team2": away_team, "team2_score": score_away})
+        elif round_name == 'quarter finals':
+            stages_data["Quarterfinals"].append({"team1": home_team, "team1_score": score_home, "team2": away_team, "team2_score": score_away})
+        elif round_name == 'semi finals':
+            stages_data["Semifinals"].append({"team1": home_team, "team1_score": score_home, "team2": away_team, "team2_score": score_away})
+        elif round_name == 'final':
+            stages_data["Final"].append({"team1": home_team, "team1_score": score_home, "team2": away_team, "team2_score": score_away})
 
+    # Create figure
+    fig = go.Figure()
+
+    # Set the layout
     fig.update_layout(
-        title="Champions League Knockout Phase",
-        xaxis=dict(title='Competition Level', tickvals=list(range(len(rounds))), ticktext=rounds),
-        yaxis=dict(title='Teams', tickvals=list(y_positions.values()), ticktext=list(y_positions.keys())),
-        template='tournament_bracket'
+        xaxis=dict(range=[-0.05, 1.25], showgrid=False, zeroline=False, showticklabels=False),
+        yaxis=dict(range=[0, 1.2], showgrid=False, zeroline=False, showticklabels=False),
+        width=1200,
+        height=800,
+        title="Tournament Chart",
+        template='plotly_white',
+        margin=dict(t=50, b=20, l=20, r=20)
     )
 
+    # Add the matches and stage labels
+    stage_height = 0.1
+    x = 0
+    y_base_group = 1.0
+    y_base_knockout = y_base_group - (stage_height * 1.5) * 1  # Align with the second match of the group stage
+    y_base = [y_base_group, y_base_knockout, y_base_knockout, y_base_knockout, y_base_knockout]
+
+    x_positions = []
+    y_positions = []
+
+    for i, (stage_name, y) in enumerate(zip(stages_data.keys(), y_base)):
+        # Add stage label
+        if i == 0:  # Group Stage
+            fig.add_annotation(x=x + 0.1, y=y + 0.05, text=stage_name, showarrow=False, font=dict(size=14, color="blue"), xanchor="center")
+        else:  # Knockout Stages
+            fig.add_annotation(x=x + 0.1, y=y_base_knockout + 0.05, text=stage_name, showarrow=False, font=dict(size=14, color="blue"), xanchor="center")
+
+        for match in stages_data[stage_name]:
+            add_match(fig, x, y, match, stage_height)
+            if i != 0:  # Store positions for knockout stages to draw lines
+                x_positions.append(x)
+                y_positions.append(y + stage_height / 2)
+            if i == 0:  # Group Stage
+                y -= stage_height * 1.5  # Add some spacing between matches in the same stage
+        x += 0.25  # Add spacing between stages
+
+    # Draw connecting lines for knockout stages
+    for i in range(1, len(x_positions)):
+        fig.add_shape(
+            type="line",
+            x0=x_positions[i-1] + 0.2, y0=y_positions[i-1],
+            x1=x_positions[i], y1=y_positions[i],
+            line=dict(color="black", width=2)
+        )
+
+    # Show the figure
     return fig
-
-# Function to generate the final figure
-def get_figure():
-    file_path = 'path_to_your_excel_file.xlsx'  # Replace with your file path
-
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"File does not exist at the specified location: {file_path}")
-
-    print(f"Loading data from {file_path}...")
-
-    df_match_infos = pd.read_excel(file_path, sheet_name='Match information', usecols=['RoundName', 'HomeTeamName', 'AwayTeamName', 'ScoreHome', 'ScoreAway'])
-
-    print("Data loaded successfully.")
-
-    return make_tournament_bracket(df_match_infos)
-
-

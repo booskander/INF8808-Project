@@ -26,8 +26,8 @@ df_lineups = pd.read_excel(
 
 bubble_graph = bubble_chart.make_bubble_chart(df_viz_1)
 
-bubble_graph.show()
-""" Field chart """
+# bubble_graph.show()
+# """ Field chart """
 players_data = field_preprocess.get_italian_players_positions(df_lineups)
 players = field_preprocess.get_filter_italian_final_players(df_lineups)
 players_names = players['OfficialSurname'].tolist()
@@ -37,11 +37,9 @@ players_stats = field_preprocess.get_italian_players_stats(
 field_graph = field_chart.make_field_chart(players_data, players_stats)
 
 """ Tournament chart """
-file_path = "./assets/EURO_2020_DATA.xlsx"  # Update this path to your actual file location
+file_path = "./assets/EURO_2020_DATA.xlsx"
 df_match_infos = tournament_chart.load_match_data(file_path)
-
-# Plot the tournament bracket
-tournament_chart.plot_tournament_bracket(df_match_infos)
+tournament_figure = tournament_chart.initialize(df_match_infos)
 
 
 def to_html(component):
