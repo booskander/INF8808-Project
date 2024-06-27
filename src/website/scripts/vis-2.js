@@ -67,12 +67,29 @@ function populateDropdowns() {
                 const option = document.createElement('option');
                 option.value = team;
                 option.textContent = team;
+                option.selected = team === 'Italy';
                 countryDropdown.appendChild(option);
             });
             countryDropdown.disabled = false;
         })
-        .catch(error => console.error('Error fetching countries:', error));
-
+        .catch(error => console.error('Error fetching countries:', error))
+        .then(() => fetch(`/data/teams/Italy`))
+        .then(response => response.json())
+        .then(teams => {
+            console.log(teams);
+            teamDropdown.innerHTML = '';
+            teams.forEach(team => {
+                const option = document.createElement('option');
+                option.value = team;
+                option.textContent = team;
+                option.selected = team === 'England';
+                teamDropdown.appendChild(option);
+            });
+            teamDropdown.disabled = false;
+            checkDropdowns();
+        })
+        .catch(error => console.error('Error fetching teams:', error));;
+    
     countryDropdown.addEventListener('change', () => {
         const selectedCountry = countryDropdown.value;
         fetch(`/data/teams/${selectedCountry}`)
