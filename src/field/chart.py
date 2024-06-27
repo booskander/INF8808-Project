@@ -79,12 +79,24 @@ def make_field_chart(players=None, stats=None):
 
     # Update layout
     fig.update_layout(
-        xaxis=dict(range=[-10, 110], showgrid=False, zeroline=False),
-        yaxis=dict(range=[-10, 110], showgrid=False, zeroline=False),
-        height=800,
-        width=1200,
-        margin=dict(t=50, b=50, l=50, r=50),
-        plot_bgcolor='#4CAF50'  # Set the background color to green
+        xaxis=dict(range=[-10, 110], showgrid=False, zeroline=False, title="TacticX"),
+        yaxis=dict(range=[-10, 110], showgrid=False, zeroline=False, title="TacticY"),
+        height=600,
+        width=1000,
+        margin=dict(t=80, b=50, l=50, r=50),
+        plot_bgcolor='#4CAF50',  # Set the background color to green
+        title={
+            'text': "Team formation and players statistics",
+            'y':0.97,
+            'x':0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'
+        },
+        font=dict(
+            family="Arial, sans-serif",
+            size=18,
+            color="black"
+        )
     )
 
     return fig

@@ -7,6 +7,8 @@ from field import chart as field_chart
 from field import preprocess as field_preprocess
 from field import chart as field_chart
 from tournament import chart as tournament_chart
+from tournament import preprocess as tournament_preprocess
+
 import dash_core_components as dcc
 import dash_html_components as html
 import dash
@@ -30,7 +32,7 @@ df_lineups = pd.read_excel(
 df_viz_1 = bubble_preprocess.preprocess_data(df_match_stats, df_player_stats)
 bubble_graph = bubble_chart.make_bubble_chart(df_viz_1)
 
-""" Field chart """
+# """ Field chart """
 
 def get_field_chart(team, opposite_team):
     if team is None:
@@ -47,8 +49,7 @@ def get_field_chart(team, opposite_team):
     return field_graph
 
 """ Tournament chart """
-tournament_figure = tournament_chart.get_figure()
-
+tournament_figure = tournament_chart.make_tournament_chart()
 
 
 def to_html(component):
