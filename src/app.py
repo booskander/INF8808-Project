@@ -33,11 +33,6 @@ df_viz_1 = bubble_preprocess.preprocess_data(df_match_stats, df_player_stats)
 bubble_graph = bubble_chart.make_bubble_chart(df_viz_1)
 
 # """ Field chart """
-players_data = field_preprocess.get_italian_players_positions(df_lineups)
-players = field_preprocess.get_filter_italian_final_players(df_lineups)
-players_names = players['OfficialSurname'].tolist()
-players_stats = field_preprocess.get_italian_players_stats(
-    df_player_stats, players_names)
 
 def get_field_chart(team, opposite_team):
     if team is None:
