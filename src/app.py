@@ -39,10 +39,10 @@ def get_field_chart(team, opposite_team):
         team = 'Italy'
     if opposite_team is None:
         opposite_team = 'England'
-    players_data = field_preprocess.get_italian_players_positions(df_lineups, team, opposite_team)
-    players = field_preprocess.get_filter_italian_final_players(df_lineups, team, opposite_team)
+    players_data = field_preprocess.get_players_positions(df_lineups, team, opposite_team)
+    players = field_preprocess.get_filter_final_players(df_lineups, team, opposite_team)
     players_names = players['OfficialSurname'].tolist()
-    players_stats = field_preprocess.get_italian_players_stats(
+    players_stats = field_preprocess.get_players_stats(
         df_player_stats, players_names, team, opposite_team)
 
     field_graph = field_chart.make_field_chart(players_data, players_stats)

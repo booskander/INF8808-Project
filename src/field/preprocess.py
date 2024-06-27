@@ -1,9 +1,6 @@
 import pandas as pd
 
 def preprocess_data(match_stats, player_stats, line_ups):
-    '''
-    This function preprocesses the data for the bubble chart.
-    '''
     
     data = {
         'label': [
@@ -16,9 +13,9 @@ def preprocess_data(match_stats, player_stats, line_ups):
         'value': [
             get_country_team_(line_ups),
             get_opposite_team_(line_ups),
-            get_filter_italian_final_players(line_ups),
-            get_filter_all_italian_players_on_field(line_ups),
-            get_italian_players_stats(match_stats)
+            get_filter_final_players(line_ups),
+            get_filter_all_players_on_field(line_ups),
+            get_players_stats(match_stats)
         ]
     }
     return pd.DataFrame(data)
@@ -35,14 +32,13 @@ def get_opposite_team_(df, country_team):
         filtered_opposite_teams.remove(country_team)
     return list(filtered_opposite_teams)
 
-# Define a function to filter the players for Italy who are not staff and not bench
-def get_filter_all_italian_players_on_field(df, country_team):
+def get_filter_all_players_on_field(df, country_team):
     if country_team is None:
         country_team = 'Italy'
     filtered_all_italian_players = df[(df['Country'] == country_team) & (df['IsStaff'] == False) & (df['IsBench'] == False)]
     return filtered_all_italian_players
 
-def get_filter_italian_final_players(df, country_team, opposite_team):
+def get_filter_final_players(df, country_team, opposite_team):
     if country_team is None:
         country_team = 'Italy'
     if opposite_team is None:
@@ -51,18 +47,18 @@ def get_filter_italian_final_players(df, country_team, opposite_team):
     return filtered_final_italian_players
 
 
-def get_italian_players_positions(df, country_team, opposite_team):
+def get_players_positions(df, country_team, opposite_team):
     if country_team is None:
         country_team = 'Italy'
     if opposite_team is None:
         opposite_team = 'England'
-    filtered_players = get_filter_italian_final_players(df, country_team, opposite_team)
+    filtered_players = get_filter_final_players(df, country_team, opposite_team)
     players_positions = filtered_players[['OfficialSurname', 'TacticX', 'TacticY']]
     players_positions['TacticX'] = players_positions['TacticX'].astype(float) / 10  # Scaling the X position
     players_positions['TacticY'] = players_positions['TacticY'].astype(float) / 10  # Scaling the Y position
     return players_positions.to_dict(orient='records')
 
-def get_italian_players_stats(df, playerNameList, team, opposite_team):
+def get_players_stats(df, playerNameList, team, opposite_team):
     if team is None:
         team = 'Italy'
     if opposite_team is None:

@@ -8,10 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('/pages/vis-2/field?team=Italy&opposite_team=England')
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             const dashContainer = document.getElementById("field-chart");
             dashContainer.innerHTML = data.field_graph;
-            loadScriptsAndExecuteInline(dashContainer);
+            loadScriptsAndExecuteInline(dashContainer).then(() => {
+                animateMarkers();
+            });
         })
         .catch(error => console.error('Error fetching field chart:', error));
     populateDropdowns();
@@ -44,7 +45,7 @@ function loadScriptsAndExecuteInline(container) {
         script.remove();
     });
 
-    loadScripts(scriptUrls)
+    return loadScripts(scriptUrls)
         .then(() => {
             inlineScripts.forEach(inlineScript => {
                 const scriptElement = document.createElement('script');
@@ -76,7 +77,6 @@ function populateDropdowns() {
         .then(() => fetch(`/data/teams/Italy`))
         .then(response => response.json())
         .then(teams => {
-            console.log(teams);
             teamDropdown.innerHTML = '';
             teams.forEach(team => {
                 const option = document.createElement('option');
@@ -125,10 +125,55 @@ function populateDropdowns() {
             .then(response => response.json())
             .then(data => {
                 const dashContainer = document.getElementById("field-chart");
-                console.log(data);
                 dashContainer.innerHTML = data.field_graph;
-                loadScriptsAndExecuteInline(dashContainer);
+                loadScriptsAndExecuteInline(dashContainer).then(() => {
+                    console.log('Animating markers', dashContainer.innerHTML);
+                    animateMarkers();
+                });
             })
             .catch(error => console.error('Error generating field chart:', error));
+    });
+}
+
+function animateMarkers() {
+    const markers = document.querySelectorAll(".plotly .scatterlayer .point");
+
+    if (markers.length === 0) {
+        console.error('No markers found for animation.');
+        return;
+    }
+
+    let toggle = false; 
+    let counter = 0; 
+    const toggleInterval = 5000; 
+
+    markers.forEach(marker => {
+        const transform = marker.getAttribute("transform");
+        console.log(`Marker transform: ${transform}`);
+        const translateMatch = /translate\(([^,]+),([^)]+)\)/.exec(transform);
+        if (!translateMatch) {
+            console.error('No translate found for marker:', marker);
+            return;
+        }
+
+        const initialX = parseFloat(translateMatch[1]);
+        const initialY = parseFloat(translateMatch[2]);
+        const amplitude = 2; 
+        console.log(`Initial position: (${initialX}, ${initialY})`);
+
+        function animate() {
+            counter++;
+            if (counter >= toggleInterval) {
+                toggle = !toggle;
+                counter = 0;
+            }
+
+            const offsetX = toggle ? Math.sin(Date.now() / 300) * amplitude : 0;
+            const offsetY = toggle ? 0 : Math.cos(Date.now() / 300) * amplitude;
+            marker.setAttribute("transform", `translate(${initialX + offsetX}, ${initialY + offsetY})`);
+            requestAnimationFrame(animate);
+        }
+
+        animate();
     });
 }
