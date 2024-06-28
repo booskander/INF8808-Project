@@ -58,57 +58,70 @@ body {
   align-items: center;
 }
 
-.center-container {
-  text-align: center;
-  width: 80%;
-}
-
 #field-chart {
   justify-content: center;
   align-items: center;
   font-family: Arial, sans-serif;
   display: flex; 
   flex-direction: column;
+  height: 100%;
 }
 
 #field-chart > * {
   width: 95%;
   height: 80%;
 }
+#field-chart > .loading-spinner {
+  width: 100px; 
+  height: 100px; 
+}
+
+.loading {
+  display: none !important;
+}
 
 .dropdown-container {
+  background-color: #061b22;
+  padding: 20px;
   display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-  margin-left: 60px;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .dropdown-container label {
-  margin: 0 10px;
-  color: white;
+  color: aliceblue;
+  margin-bottom: 5px;
 }
 
-select {
-  font-size: 1.2em;
+.dropdown-container select,
+.dropdown-container button {
+  margin-bottom: 15px;
   padding: 10px;
-  margin: 5px;
+  border: none;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  width: 200px;
 }
 
-button {
-  font-size: 1.2em;
-  padding: 10px 20px;
-  border-radius: 5px;
-  background-color: #28a745;
+.dropdown-container select {
+  background-color: #fff;
+  color: #333;
+}
+
+.dropdown-container button {
+  background-color: #0cb300;
   color: white;
-  border: none;
   cursor: pointer;
-  margin-left: 30px; /* Add margin to the left to space out the button */
 }
-button:hover {
-  background-color: #218838;
+
+.dropdown-container button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
+
+.dropdown-container button:not(:disabled):hover {
+  background-color: #0cb300;
+}
+
 
 .page-footer {
   background-color: #061b22;
@@ -128,4 +141,19 @@ button:hover {
 .page-footer p {
   margin: 0;
   font-size: 1em;
+}
+
+.loading-spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #06b0ff;
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
