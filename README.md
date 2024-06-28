@@ -2,17 +2,17 @@ This project uses poetry as a dependency manager
 
 Poetry installation:
 
-use pipx
+use pip
 
-`pipx install poetry`
+`pip install poetry`
 
 to add a dependency use:
 
-`peotry add <dependency name>`
+`poetry add <dependency name>`
 
 to use the poetry virtual env run:
 
-`peotry shell`
+`poetry shell`
 
 to install on your local machine thhe dependencies run:
 
