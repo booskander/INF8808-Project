@@ -1,43 +1,27 @@
 const homeButton = document.querySelector("button");
 
 homeButton.onclick = () => {
-    window.location.href = "/"
+    window.location.href = "/";
 }
+
 document.addEventListener('DOMContentLoaded', () => {
+    const dashContainer = document.getElementById("bubble-chart");
+
+    // Add a loading spinner inside the dashContainer
+    dashContainer.innerHTML = `
+        <div class="loading-spinner"></div>
+    `;
+    
     fetch('/pages/vis-1/bubble')
         .then(response => response.json())
         .then(data => {
-            console.log(data);
-            const dashContainer = document.getElementById("bubble-chart");
+            
+        setTimeout(() => {
             dashContainer.innerHTML = data.bubble_graph;
+            loadScriptsAndExecuteInline(dashContainer);
+        }, 2000);
 
-            // Extract script URLs and inline scripts
-            const scriptUrls = [];
-            const inlineScripts = [];
-            const scripts = dashContainer.querySelectorAll('script');
-            scripts.forEach(script => {
-                if (script.src) {
-                    scriptUrls.push(script.src);
-                } else {
-                    inlineScripts.push(script.textContent);
-                }
-                script.remove(); // Remove the script element after extracting the content
-            });
-
-            // Load external scripts
-            loadScripts(scriptUrls)
-                .then(() => {
-                    // Execute inline scripts after external scripts are loaded
-                    inlineScripts.forEach(inlineScript => {
-                        const scriptElement = document.createElement('script');
-                        scriptElement.textContent = inlineScript;
-                        document.body.appendChild(scriptElement);
-                    });
-                })
-                .catch(error => console.error('Error loading external scripts:', error));
-        })
-        .catch(error => console.error('Error fetching bubble chart:', error));
-});
+})});
 
 function loadScripts(urls) {
     return Promise.all(
@@ -52,3 +36,28 @@ function loadScripts(urls) {
         })
     );
 }
+
+function loadScriptsAndExecuteInline(container) {
+    const scriptUrls = [];
+    const inlineScripts = [];
+    const scripts = container.querySelectorAll('script');
+    scripts.forEach(script => {
+        if (script.src) {
+            scriptUrls.push(script.src);
+        } else {
+            inlineScripts.push(script.textContent);
+        }
+        script.remove();
+    });
+
+    return loadScripts(scriptUrls)
+        .then(() => {
+            inlineScripts.forEach(inlineScript => {
+                const scriptElement = document.createElement('script');
+                scriptElement.textContent = inlineScript;
+                document.body.appendChild(scriptElement);
+            });
+        })
+        .catch(error => console.error('Error loading external scripts:', error));
+}
+

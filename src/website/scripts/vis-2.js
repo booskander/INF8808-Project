@@ -5,14 +5,26 @@ homeButton.onclick = () => {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    const dashContainer = document.getElementById("field-chart");
+    dashContainer.innerHTML = `
+    <div class="loading-spinner"></div>
+`;
+    const dropDownMenu = document.getElementById("dropdown-container");
+    dropDownMenu.classList.add("loading");
+    console.log(dropDownMenu.classList);
     fetch('/pages/vis-2/field?team=Italy&opposite_team=England')
         .then(response => response.json())
         .then(data => {
             const dashContainer = document.getElementById("field-chart");
-            dashContainer.innerHTML = data.field_graph;
-            loadScriptsAndExecuteInline(dashContainer).then(() => {
-                animateMarkers();
-            });
+            setTimeout( () => {
+                dashContainer.innerHTML = data.field_graph;
+                loadScriptsAndExecuteInline(dashContainer).then(() => {
+                    animateMarkers();
+                });
+                dropDownMenu.classList.remove("loading");
+            }, 1000
+        );
+
         })
         .catch(error => console.error('Error fetching field chart:', error));
     populateDropdowns();
