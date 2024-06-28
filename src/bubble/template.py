@@ -2,14 +2,6 @@ import plotly.graph_objects as go
 import plotly.io as pio
 
 THEME = {
-    'bar_colors': [
-        '#861388',
-        '#d4a0a7',
-        '#dbd053',
-        '#1b998b',
-        '#A0CED9',
-        '#3e6680'
-    ],
     'background_color': '#061b22', 
     'font_family': 'Montserrat',
     'font_color': '#ffffff',
@@ -38,6 +30,5 @@ def create_template():
                 )
             ),
             hovermode='closest'
-        ),
-        data_bar=[go.Bar(marker_color=x) for x in THEME['bar_colors']]
+        )
     )
